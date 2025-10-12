@@ -1,4 +1,6 @@
+import { BaseColors } from '@/constants/theme';
 import { useAuth } from '@/contexts/AuthContext';
+import { getDisciplineEmoji, getDisciplineName, useDisciplineTheme } from '@/hooks/use-discipline-theme';
 import { AnswersService, UserAnswer } from '@/services/answersService';
 import { Disciplina, Question, questionsService } from '@/services/questionsApi';
 import { QuestionResult, ResultData, resultsService } from '@/services/resultsApi';
@@ -10,6 +12,9 @@ export default function QuestoesScreen() {
   const { disciplina } = useLocalSearchParams<{
     disciplina: Disciplina;
   }>();
+  
+  const theme = useDisciplineTheme(disciplina);
+  const styles = createStyles(theme);
   
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -24,11 +29,8 @@ export default function QuestoesScreen() {
   
   const { user } = useAuth();
 
-  const disciplinaNames = {
-    [Disciplina.PORTUGUES]: 'Português',
-    [Disciplina.MATEMATICA]: 'Matemática',
-    [Disciplina.CIENCIAS]: 'Ciências'
-  };
+  const disciplinaName = disciplina ? getDisciplineName(disciplina) : 'Disciplina';
+  const disciplinaEmoji = disciplina ? getDisciplineEmoji(disciplina) : '📖';
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -226,7 +228,7 @@ export default function QuestoesScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Resumo - {disciplinaNames[disciplina]}</Text>
+          <Text style={styles.title}>Resumo - {disciplinaName}</Text>
         </View>
         
         <View style={styles.summaryContainer}>
@@ -285,7 +287,7 @@ export default function QuestoesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{disciplinaNames[disciplina]}</Text>
+        <Text style={[styles.title]}>{disciplinaEmoji} {disciplinaName}</Text>
         <Text style={styles.counter}>
           Questão {currentQuestionIndex + 1} de {questions.length}
         </Text>
@@ -355,64 +357,72 @@ export default function QuestoesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: theme.textSecondary,
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: theme.primary,
     padding: 20,
     paddingTop: 50,
+    shadowColor: BaseColors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
+    color: BaseColors.white,
     textAlign: 'center',
   },
   counter: {
     fontSize: 16,
-    color: 'white',
+    color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: 5,
-    opacity: 0.9,
   },
   content: {
     flex: 1,
     padding: 20,
   },
   questionContainer: {
-    backgroundColor: 'white',
+    backgroundColor: theme.surface,
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: BaseColors.black,
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 8,
+    elevation: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: theme.primary,
   },
   questionTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: theme.primary,
     marginBottom: 10,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   questionText: {
     fontSize: 16,
-    color: '#333',
+    color: theme.text,
     lineHeight: 24,
   },
   alternativesContainer: {
@@ -420,32 +430,40 @@ const styles = StyleSheet.create({
   },
   alternativeButton: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: theme.surface,
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#e0e0e0',
+    borderColor: BaseColors.gray[200],
     alignItems: 'flex-start',
+    shadowColor: BaseColors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   selectedAlternative: {
-    borderColor: '#007AFF',
-    backgroundColor: '#f0f8ff',
+    borderColor: theme.primary,
+    backgroundColor: theme.light,
+    shadowOpacity: 0.15,
+    elevation: 4,
   },
   alternativeKey: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: theme.text,
     marginRight: 10,
     width: 20,
   },
   alternativeText: {
     fontSize: 16,
-    color: '#333',
+    color: theme.text,
     flex: 1,
     lineHeight: 22,
   },
   selectedText: {
-    color: '#007AFF',
+    color: theme.primary,
+    fontWeight: '600',
   },
   navigationContainer: {
     flexDirection: 'row',
@@ -478,26 +496,28 @@ const styles = StyleSheet.create({
   },
   // Estilos do resumo
   summaryContainer: {
-    backgroundColor: 'white',
+    backgroundColor: theme.surface,
     margin: 20,
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: BaseColors.black,
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 8,
+    elevation: 6,
+    borderTopWidth: 4,
+    borderTopColor: theme.primary,
   },
   summaryScore: {
     fontSize: 18,
-    color: '#007AFF',
+    color: theme.primary,
     fontWeight: '600',
     marginBottom: 5,
   },
   summaryPercentage: {
     fontSize: 16,
-    color: '#666',
+    color: theme.textSecondary,
   },
   // Estilos da tabela
   tableContainer: {
@@ -604,10 +624,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   finishConfirmButton: {
-    backgroundColor: '#34C759',
+    backgroundColor: theme.primary,
   },
   finishConfirmButtonText: {
-    color: 'white',
+    color: BaseColors.white,
     fontSize: 16,
     fontWeight: '600',
   },

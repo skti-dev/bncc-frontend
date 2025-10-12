@@ -1,9 +1,57 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Sistema de temas gamificado para o BNCC App
+ * Cores alegres e vibrantes para engajar os estudantes
  */
 
 import { Platform } from 'react-native';
+
+export const BaseColors = {
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: {
+    50: '#F9FAFB',
+    100: '#F3F4F6',
+    200: '#E5E7EB',
+    300: '#D1D5DB',
+    400: '#9CA3AF',
+    500: '#6B7280',
+    600: '#4B5563',
+    700: '#374151',
+    800: '#1F2937',
+    900: '#111827',
+  },
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#3B82F6',
+};
+
+export const DisciplineColors = {
+  portugues: {
+    primary: '#007AFF',
+    secondary: '#5AC8FA',
+    light: '#E3F2FD',
+    dark: '#1565C0',
+    gradient: ['#007AFF', '#5AC8FA'],
+    accent: '#FFD60A',
+  },
+  matematica: {
+    primary: '#FF3B30',
+    secondary: '#FF6B6B',
+    light: '#FFEBEE',
+    dark: '#C62828',
+    gradient: ['#FF3B30', '#FF6B6B'],
+    accent: '#34C759',
+  },
+  ciencias: {
+    primary: '#34C759',
+    secondary: '#52D869',
+    light: '#E8F5E8',
+    dark: '#2E7D32',
+    gradient: ['#34C759', '#52D869'],
+    accent: '#FF9500',
+  },
+};
 
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
