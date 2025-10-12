@@ -130,6 +130,7 @@ export default function QuestoesScreen() {
     const resultData: ResultData = {
       disciplina: disciplina,
       ano: user?.metadata?.ano || 0,
+      email: user?.email || '',
       respostas: questionResults,
       pontuacao: correctAnswers,
       total_questoes: questions.length

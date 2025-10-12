@@ -3,6 +3,7 @@ import api from './api';
 export interface ResultData {
   disciplina: string;
   ano: number;
+  email: string;
   respostas: QuestionResult[];
   pontuacao: number;
   total_questoes: number;
