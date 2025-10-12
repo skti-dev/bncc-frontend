@@ -34,11 +34,11 @@ export default function QuestoesScreen() {
 
         const response = await questionsService.getQuestions(params);
 
-        if (response.success) {
-          setQuestions(response.data);
-        } else {
+        if (!response.success) {
           Alert.alert('Erro', response.message || 'Erro ao carregar questões');
-        }
+          return;
+        } 
+        setQuestions(response.data);
       } catch {
         Alert.alert('Erro', 'Erro de conexão com o servidor');
       } finally {
