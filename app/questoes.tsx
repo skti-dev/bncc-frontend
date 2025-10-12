@@ -178,7 +178,7 @@ export default function QuestoesScreen() {
     const questionResults: QuestionResult[] = questions.map((question, index) => {
       const userAnswer = tempAnswers[index] || '';
       return {
-        questao_id: question.id,
+        questao_id: question.id || question._id || '',
         codigo: question.codigo,
         resposta_dada: userAnswer,
         gabarito: question.questao.gabarito,

@@ -57,6 +57,24 @@ export interface ResultsResponse {
   message?: string;
 }
 
+export interface ResultadoDetalhado {
+  id: string;
+  disciplina: string;
+  ano: number;
+  respostas: QuestionResult[];
+  pontuacao: number;
+  total_questoes: number;
+  percentual_acerto: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResultadoDetalhadoResponse {
+  success: boolean;
+  data?: ResultadoDetalhado;
+  message?: string;
+}
+
 export const resultsService = {
   submitResults: async (resultData: ResultData): Promise<ResultsResponse> => {
     try {
@@ -92,6 +110,25 @@ export const resultsService = {
       };
     } catch (error: any) {
       console.log('[RESULTS] Erro ao buscar meus resultados: ', error.message);
+      console.log('[RESULTS] Código do erro:', error.code);
+      
+      return {
+        success: false,
+        message: error.response?.data?.message || `Erro de conexão: ${error.message}`,
+      };
+    }
+  },
+
+  getResultadoDetalhado: async (id: string): Promise<ResultadoDetalhadoResponse> => {
+    try {
+      const response = await api.get(`/resultados/${id}`);
+
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error: any) {
+      console.log('[RESULTS] Erro ao buscar resultado detalhado: ', error.message);
       console.log('[RESULTS] Código do erro:', error.code);
       
       return {

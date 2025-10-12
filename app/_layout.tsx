@@ -43,6 +43,12 @@ function RootLayoutNav() {
             presentation: "card"
           }} 
         />
+        <Stack.Screen 
+          name="resultado-detalhes/[id]" 
+          options={{ 
+            headerShown: false
+          }} 
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

@@ -41,9 +41,16 @@ export interface Question {
     gabarito: string;
     url?: string;
   };
-  id: string;
+  id?: string;
+  _id?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface QuestionResponse {
+  success: boolean;
+  data?: Question;
+  message?: string;
 }
 
 export const questionsService = {
@@ -65,6 +72,24 @@ export const questionsService = {
       };
     } catch (error: any) {
       console.log('[QUESTIONS] Erro ao buscar questões: ', error.message);
+      
+      return {
+        success: false,
+        message: error.response?.data?.message || `Erro de conexão: ${error.message}`,
+      };
+    }
+  },
+
+  getQuestionById: async (id: string): Promise<QuestionResponse> => {
+    try {
+      const response = await api.get(`/questoes/${id}`);
+      
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error: any) {
+      console.log('[QUESTIONS] Erro ao buscar questão: ', error.message);
       
       return {
         success: false,

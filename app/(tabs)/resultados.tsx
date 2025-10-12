@@ -2,9 +2,9 @@ import { BaseColors, DisciplineColors } from '@/constants/theme';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDisciplineName } from '@/hooks/use-discipline-theme';
 import { MeuResultado, resultsService } from '@/services/resultsApi';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function MeusResultadosScreen() {
   const { user } = useAuth();
@@ -75,6 +75,13 @@ export default function MeusResultadosScreen() {
     }
   };
 
+  const handleVerDetalhes = (resultadoId: string) => {
+    router.push({
+      pathname: '/resultado-detalhes/[id]',
+      params: { id: resultadoId }
+    });
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', {
@@ -132,6 +139,13 @@ export default function MeusResultadosScreen() {
               <Text style={styles.estatisticaValor}>{item.ano}º ano</Text>
             </View>
           </View>
+
+          <TouchableOpacity 
+            style={styles.detalhesButton}
+            onPress={() => handleVerDetalhes(item.id)}
+          >
+            <Text style={styles.detalhesButtonText}>📊 Ver Detalhes</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -349,5 +363,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: BaseColors.gray[600],
     fontWeight: '500',
+  },
+  detalhesButton: {
+    backgroundColor: BaseColors.info,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  detalhesButtonText: {
+    color: BaseColors.white,
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
