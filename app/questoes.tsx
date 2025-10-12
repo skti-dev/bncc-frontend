@@ -4,15 +4,17 @@ import { getDisciplineEmoji, getDisciplineName, useDisciplineTheme } from '@/hoo
 import { AnswersService, UserAnswer } from '@/services/answersService';
 import { Disciplina, Question, questionsService } from '@/services/questionsApi';
 import { QuestionResult, ResultData, resultsService } from '@/services/resultsApi';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, BackHandler, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function QuestoesScreen() {
   const { disciplina } = useLocalSearchParams<{
     disciplina: Disciplina;
   }>();
   
+  const navigation = useNavigation();
   const theme = useDisciplineTheme(disciplina);
   const styles = createStyles(theme);
   
@@ -26,10 +28,70 @@ export default function QuestoesScreen() {
   const [tempAnswers, setTempAnswers] = useState<{[key: number]: string}>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [canNavigateBack, setCanNavigateBack] = useState(false);
   
   const { user } = useAuth();
 
   const disciplinaName = disciplina ? getDisciplineName(disciplina) : 'Disciplina';
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Questionário ${disciplinaName}`,
+    });
+  }, [navigation, disciplinaName]);
+
+  const handleBackPress = useCallback(() => {
+    if (showSummary || canNavigateBack) {
+      return false;
+    }
+    
+    Alert.alert(
+      'Sair do Questionário',
+      'Tem certeza que deseja sair? Todo o progresso será perdido.',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: () => {
+            if (sessionKey) {
+              AnswersService.clearSession(sessionKey);
+            }
+            router.push('/(tabs)');
+          }
+        }
+      ]
+    );
+    return true;
+  }, [sessionKey, showSummary, canNavigateBack]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+      
+      return () => {
+        backHandler.remove();
+      };
+    }, [handleBackPress])
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Questionário ${disciplinaName}`,
+      headerLeft: () => (
+        <TouchableOpacity 
+          onPress={handleBackPress}
+          style={{ marginLeft: 10, padding: 8 }}
+        >
+          <Text style={{ color: '#007AFF', fontSize: 16 }}>← Voltar</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, disciplinaName, handleBackPress]);
+
   const disciplinaEmoji = disciplina ? getDisciplineEmoji(disciplina) : '📖';
 
   useEffect(() => {
@@ -150,6 +212,7 @@ export default function QuestoesScreen() {
       setSessionAnswers(allAnswers);
       setShowConfirmation(false);
       setShowSummary(true);
+      setCanNavigateBack(true);
     } catch (error) {
       Alert.alert('Erro', 'Erro de conexão com o servidor. Tente novamente.');
       console.error('Erro ao enviar resultados:', error);

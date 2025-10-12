@@ -33,6 +33,16 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="questoes" 
+          options={{ 
+            headerShown: true,
+            title: "Questionário",
+            headerBackTitle: "",
+            headerBackVisible: false,
+            presentation: "card"
+          }} 
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
