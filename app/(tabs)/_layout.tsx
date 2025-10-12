@@ -25,6 +25,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="resultados"
+        options={{
+          title: "Meus Resultados",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="chart.bar.fill" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
