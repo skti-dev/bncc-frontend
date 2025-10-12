@@ -1,5 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { router } from 'expo-router';
 import { API_URL } from '../constants/api';
 
 const api = axios.create({
@@ -12,11 +12,19 @@ const api = axios.create({
   timeout: 30000,
 });
 
+const forceLogout = async () => {
+  try {
+    await AsyncStorage.removeItem("user");
+  } catch (error) {
+    console.error("Erro ao fazer logout automático:", error);
+  }
+};
+
 api.interceptors.response.use(
   response => response,
-  error => {
+  async error => {
     if (error.response && error.response.status === 401) {
-      router.replace('/login');
+      await forceLogout();
     }
     return Promise.reject(error);
   }

@@ -12,6 +12,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (user: User) => Promise<void>;
   logout: () => Promise<void>;
+  checkAuthState: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,16 +25,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     checkAuthState();
+    
+    const interval = setInterval(checkAuthState, 60000); // a cada 1 minuto verifica o estado da autenticação
+    
+    return () => clearInterval(interval);
   }, []);
 
   const checkAuthState = async () => {
     try {
       const userData = await AsyncStorage.getItem("user");
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
+      setUser(userData ? JSON.parse(userData) : null);
     } catch (error) {
       console.error("Erro ao verificar estado de autenticação:", error);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
@@ -56,14 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(null);
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
-      // Mesmo com erro na API, remove do storage local
       await AsyncStorage.removeItem("user");
       setUser(null);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, checkAuthState }}>
       {children}
     </AuthContext.Provider>
   );
