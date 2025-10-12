@@ -1,7 +1,7 @@
 import { BaseColors } from '@/constants/theme';
 import { Question } from '@/services/questionsApi';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface QuestionCardProps {
   theme: any;
@@ -13,15 +13,50 @@ interface QuestionCardProps {
 export function QuestionCard({ theme, question, selectedAnswer, onAnswerSelect }: QuestionCardProps) {
   const styles = createStyles(theme);
 
+  const processText = (text: string) => {
+    return text.split('\\n').map((line, index) => (
+      <Text key={index} style={styles.questionText}>
+        {line}
+        {index < text.split('\\n').length - 1 && '\n'}
+      </Text>
+    ));
+  };
+
+  const processAlternativeText = (text: string, isSelected: boolean) => {
+    return text.split('\\n').map((line, index) => (
+      <Text 
+        key={index} 
+        style={[
+          styles.alternativeText,
+          isSelected && styles.selectedText
+        ]}
+      >
+        {line}
+        {index < text.split('\\n').length - 1 && '\n'}
+      </Text>
+    ));
+  };
+
   return (
     <ScrollView style={styles.content}>
       <View style={styles.questionContainer}>
         <Text style={styles.questionTitle}>
           {question.codigo}
         </Text>
-        <Text style={styles.questionText}>
-          {question.questao.enunciado}
-        </Text>
+        
+        {question.questao.url && (
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: question.questao.url }}
+              style={styles.questionImage}
+              resizeMode="contain"
+            />
+          </View>
+        )}
+        
+        <View style={styles.questionTextContainer}>
+          {processText(question.questao.enunciado)}
+        </View>
       </View>
 
       <View style={styles.alternativesContainer}>
@@ -40,12 +75,9 @@ export function QuestionCard({ theme, question, selectedAnswer, onAnswerSelect }
             ]}>
               {key}
             </Text>
-            <Text style={[
-              styles.alternativeText,
-              selectedAnswer === key && styles.selectedText
-            ]}>
-              {text}
-            </Text>
+            <View style={styles.alternativeTextContainer}>
+              {processAlternativeText(text, selectedAnswer === key)}
+            </View>
           </TouchableOpacity>
         ))}
       </View>
@@ -123,5 +155,23 @@ const createStyles = (theme: any) => StyleSheet.create({
   selectedText: {
     color: theme.primary,
     fontWeight: '600',
+  },
+  questionTextContainer: {
+    marginTop: 10,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginVertical: 15,
+    padding: 10,
+    backgroundColor: BaseColors.gray[50],
+    borderRadius: 8,
+  },
+  questionImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+  },
+  alternativeTextContainer: {
+    flex: 1,
   },
 });
