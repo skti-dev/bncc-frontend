@@ -20,7 +20,6 @@ export interface QuestionsResponse {
 
 export const questionsService = {
   getQuestions: async (params: QuestionsParams): Promise<QuestionsResponse> => {
-    console.log('[QUESTIONS] Buscando questões...', params);
     
     try {
       const response = await api.get('/questoes', {
@@ -31,8 +30,6 @@ export const questionsService = {
           shuffle: true
         }
       });
-      
-      console.log('[QUESTIONS] Questões carregadas com sucesso');
       
       return {
         success: true,
