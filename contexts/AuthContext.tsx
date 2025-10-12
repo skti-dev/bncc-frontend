@@ -50,19 +50,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      const response = await authApi.logout();
+      await authApi.logout();
 
       await AsyncStorage.removeItem("user");
       setUser(null);
-
-      if (response.success) {
-        console.log("Logout realizado com sucesso:", response.message);
-      } else {
-        console.warn(
-          "Logout local realizado, mas houve erro na API:",
-          response.message
-        );
-      }
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
       // Mesmo com erro na API, remove do storage local

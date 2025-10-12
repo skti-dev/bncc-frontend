@@ -1,26 +1,45 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Disciplina } from "@/services/questionsApi";
 import { router } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
   const { logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Erro no logout:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleDisciplineSelect = (disciplina: Disciplina) => {
-    router.push(`/questoes?page=1&disciplina=${disciplina}&codigo=`);
+    router.push(`/questoes?disciplina=${disciplina}`);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>BNCC App</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Sair</Text>
+        <TouchableOpacity 
+          style={[
+            styles.logoutButton,
+            isLoggingOut && styles.disabledButton
+          ]} 
+          onPress={handleLogout}
+          disabled={isLoggingOut}
+        >
+          {isLoggingOut ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.logoutButtonText}>Sair</Text>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -78,6 +97,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 6,
+  },
+  disabledButton: {
+    backgroundColor: "#999",
+    opacity: 0.6,
   },
   logoutButtonText: {
     color: "white",

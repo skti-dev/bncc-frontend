@@ -14,8 +14,36 @@ export interface QuestionsParams {
 
 export interface QuestionsResponse {
   success: boolean;
-  data?: any;
+  data?: {
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+    data: Question[];
+  };
   message?: string;
+}
+
+export interface Question {
+  disciplina: string;
+  ano: string;
+  codigo: string;
+  questao: {
+    enunciado: string;
+    alternativas: {
+      A: string;
+      B: string;
+      C: string;
+      D: string;
+    };
+    gabarito: string;
+    url?: string;
+  };
+  id: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export const questionsService = {
