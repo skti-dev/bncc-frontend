@@ -7,14 +7,14 @@
 
 ## 📱 Screenshots
 
-
-### 🏠 Tela Inicial
-
-
-### 📝 Questionários
-
-
-### 📊 Resultados
+![Imagem do WhatsApp de 2025-10-12 à(s) 20 45 22_1631eb31](https://github.com/user-attachments/assets/8c02bd29-4787-4fa0-ba7f-b86e10cfb14b)
+![Imagem do WhatsApp de 2025-10-12 à(s) 20 45 22_aed18bc2](https://github.com/user-attachments/assets/5e7df8ab-9cab-45c4-888e-c491d05a3607)
+![IMG-20251012-WA0009](https://github.com/user-attachments/assets/c2ae3ee3-0ff1-40d8-a864-93833fc5acce)
+![IMG-20251012-WA0011](https://github.com/user-attachments/assets/9e1afd05-f133-4dfd-8ee2-0691bca328a9)
+![IMG-20251012-WA0012](https://github.com/user-attachments/assets/0acfdff1-cbcd-4998-83fc-42146735e820)
+![IMG-20251012-WA0013](https://github.com/user-attachments/assets/96321ccd-6098-49fa-a214-263df61c3446)
+![IMG-20251012-WA0014](https://github.com/user-attachments/assets/0adbe71c-225b-4f8d-9458-6b1ec51aeed1)
+![Imagem do WhatsApp de 2025-10-12 à(s) 20 45 21_aad0fd7f](https://github.com/user-attachments/assets/4a44ea8a-92d9-424a-b606-2637b9e72d53)
 
 
 [![Made with Expo](https://img.shields.io/badge/Made%20with-Expo-1C1E24?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
