@@ -2,7 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#007AFF" />
@@ -24,22 +24,21 @@
       }
       
       #root {
-        height: 100%;
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         min-height: 100vh;
       }
       
-      /* Responsive design for desktop */
-      @media (min-width: 768px) {
+      /* Desktop only - não afeta mobile */
+      @media (min-width: 1024px) {
         #root {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           padding: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         
-        /* Limitar largura do app em desktop */
+        /* Limitar largura do app apenas em desktop */
         #root > div {
           max-width: 450px !important;
           width: 100% !important;
@@ -56,11 +55,36 @@
         -webkit-tap-highlight-color: transparent;
       }
       
-      /* Improve input appearance */
+      /* Safari mobile friendly inputs */
       input, textarea {
-        font-size: 16px !important; /* Prevent zoom on iOS */
+        font-size: 16px !important;
         border-radius: 8px;
         outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      
+      /* Specific fixes for Safari mobile */
+      @supports (-webkit-touch-callout: none) {
+        html, body {
+          -webkit-overflow-scrolling: touch;
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
+        
+        #root {
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
+        
+        input, textarea {
+          transform: translateZ(0);
+        }
+      }
+      
+      /* Additional mobile Safari fixes */
+      .react-native-web-view {
+        overflow-x: hidden !important;
       }
       
       /* Fix for modal backgrounds */

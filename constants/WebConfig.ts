@@ -7,34 +7,27 @@ export const isWeb = Platform.OS === 'web';
 const { width: screenWidth } = Dimensions.get('window');
 
 export const WebConfig = {
-  // Layout constraints para web
-  maxWidth: isWeb ? Math.min(screenWidth, 500) : screenWidth,
-  centerHorizontally: isWeb && screenWidth > 768,
+  // Layout constraints para web - menos restritivo
+  maxWidth: isWeb ? screenWidth : screenWidth,
+  centerHorizontally: isWeb && screenWidth > 1024, // só desktop grande
   
-  // Padding responsivo
-  horizontalPadding: isWeb ? (screenWidth > 768 ? 40 : 20) : 20,
+  // Padding natural para mobile
+  horizontalPadding: isWeb ? (screenWidth > 1024 ? 20 : 0) : 20,
   
-  // Font scaling para web
-  fontScale: isWeb ? Math.min(screenWidth / 375, 1.2) : 1,
+  // Font scaling natural
+  fontScale: 1,
   
-  // Configurações de scroll
+  // Configurações simplificadas de scroll
   scrollViewProps: isWeb ? {
     contentContainerStyle: { 
-      minHeight: '100vh',
-      width: '100%',
-      maxWidth: 500,
-      margin: '0 auto'
+      width: '100%'
     },
     style: { width: '100%' }
   } : {},
   
-  // Estilos específicos para web
+  // Estilos mínimos para web
   webContainerStyle: isWeb ? {
-    width: '100%',
-    maxWidth: 500,
-    margin: '0 auto',
-    minHeight: '100vh',
-    boxSizing: 'border-box'
+    width: '100%'
   } : {},
   
   // Viewport meta programática
@@ -46,7 +39,7 @@ export const WebConfig = {
         viewport.name = 'viewport';
         document.head.appendChild(viewport);
       }
-      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      viewport.content = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
       
       // Adicionar CSS customizado
       const existingStyle = document.getElementById('bncc-web-styles');
@@ -54,41 +47,20 @@ export const WebConfig = {
         const style = document.createElement('style');
         style.id = 'bncc-web-styles';
         style.innerHTML = `
+          /* Minimal styles for mobile-first */
           body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            overflow-x: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            -webkit-overflow-scrolling: touch;
           }
           
-          #root {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-          }
-          
-          @media (min-width: 768px) {
+          /* Desktop only enhancements */
+          @media (min-width: 1024px) {
             #root {
               background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
               padding: 20px 0;
             }
-          }
-          
-          /* Prevent zoom on input focus */
-          input, textarea, select {
-            font-size: 16px !important;
-          }
-          
-          /* Hide scrollbars but keep functionality */
-          .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-          
-          .hide-scrollbar::-webkit-scrollbar {
-            display: none;
           }
         `;
         document.head.appendChild(style);
