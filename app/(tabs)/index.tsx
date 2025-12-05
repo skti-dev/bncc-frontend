@@ -1,4 +1,5 @@
 import { BaseColors, DisciplineColors } from "@/constants/theme";
+import { useWebLayout } from "@/constants/WebConfig";
 import { useAuth } from "@/contexts/AuthContext";
 import { Disciplina } from "@/services/questionsApi";
 import { router } from "expo-router";
@@ -8,6 +9,7 @@ import { ActivityIndicator, Animated, StyleSheet, Text, TouchableOpacity, View }
 export default function HomeScreen() {
   const { logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { isWeb, horizontalPadding } = useWebLayout();
   const [buttonScales] = useState({
     portugues: new Animated.Value(1),
     matematica: new Animated.Value(1),
@@ -45,7 +47,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingHorizontal: isWeb ? 0 : horizontalPadding }]}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.headerTitle}>🎯 BNCC App</Text>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#007AFF" />
+    <title>BNCC App</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        overflow-x: hidden;
+        background-color: #f5f5f5;
+      }
+      
+      #root {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      
+      /* Responsive design for desktop */
+      @media (min-width: 768px) {
+        #root {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 20px;
+        }
+        
+        /* Limitar largura do app em desktop */
+        #root > div {
+          max-width: 450px !important;
+          width: 100% !important;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+          border-radius: 15px !important;
+          overflow: hidden !important;
+        }
+      }
+      
+      /* Prevent text selection on buttons */
+      button, [role="button"] {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      /* Improve input appearance */
+      input, textarea {
+        font-size: 16px !important; /* Prevent zoom on iOS */
+        border-radius: 8px;
+        outline: none;
+      }
+      
+      /* Fix for modal backgrounds */
+      .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+      }
+      
+      /* Loading indicator */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      /* Improve scrolling on mobile */
+      .scroll-container {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Hide scrollbar but keep functionality */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.2);
+        border-radius: 3px;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(0,0,0,0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

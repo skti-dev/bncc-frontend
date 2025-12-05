@@ -1,50 +1,54 @@
+import { useWebLayout } from "@/constants/WebConfig";
 import { useAuth } from "@/contexts/AuthContext";
 import { authApi } from "@/services/authApi";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+  const { isWeb, horizontalPadding } = useWebLayout();
 
   const handleLogin = async () => {
     if (!email || !senha) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos");
+      setErrorMessage("Por favor, preencha todos os campos");
       return;
     }
 
     setIsLoading(true);
+    setErrorMessage(""); // Limpa erro anterior
+    
     try {
       const response = await authApi.login({ email, senha });
 
       if (!response.success) {
-        Alert.alert("Erro", response.message || "Acesso inválido");
+        setErrorMessage(response.message || "Credenciais inválidas");
         return;
       }
 
       if (!response.access_token) {
-        Alert.alert("Erro", "Token de acesso não recebido");
+        setErrorMessage("Erro interno: Token não recebido");
         return;
       }
 
       await login({ email, ...response.user }, response.access_token);
       router.replace("/");
     } catch {
-      Alert.alert("Erro", "Erro de conexão com o servidor");
+      setErrorMessage("Erro de conexão com o servidor");
     } finally {
       setIsLoading(false);
     }
@@ -52,10 +56,10 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { paddingHorizontal: horizontalPadding }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.loginContainer}>
+      <View style={[styles.loginContainer, isWeb && { maxWidth: 400, width: '100%' }]}>
         <Text style={styles.title}>Login</Text>
 
         <View style={styles.inputContainer}>
@@ -89,6 +93,12 @@ export default function LoginScreen() {
           />
         </View>
 
+        {errorMessage ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>⚠️ {errorMessage}</Text>
+          </View>
+        ) : null}
+
         <TouchableOpacity
           style={[styles.loginButton, isLoading && styles.disabledButton]}
           onPress={handleLogin}
@@ -111,6 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
     padding: 20,
+    alignItems: 'center',
   },
   loginContainer: {
     backgroundColor: "white",
@@ -124,6 +135,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 5,
+    width: '100%',
+    maxWidth: 400,
   },
   title: {
     fontSize: 28,
@@ -163,5 +176,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "600",
+  },
+  errorContainer: {
+    backgroundColor: "#ffebee",
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: "#f44336",
+  },
+  errorText: {
+    color: "#c62828",
+    fontSize: 16,
+    textAlign: "center",
   },
 });

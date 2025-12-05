@@ -1,14 +1,15 @@
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import "react-native-reanimated";
 
+import { WebConfig } from "@/constants/WebConfig";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import LoginScreen from "./login";
@@ -16,6 +17,10 @@ import LoginScreen from "./login";
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const { user, isLoading } = useAuth();
+  
+  useEffect(() => {
+    WebConfig.setViewportMeta();
+  }, []);
 
   if (isLoading) {
     return (
