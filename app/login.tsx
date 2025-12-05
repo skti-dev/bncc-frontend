@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { authApi } from "@/services/authApi";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 export default function LoginScreen() {
